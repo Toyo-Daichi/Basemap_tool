@@ -25,15 +25,17 @@ class mapping:
 	def open_csv_filelist(self, csv_filelist):
 		csv_datalist = []
 		list_option = ( 'year', 'month', 'day', 'hour(UTC)', 'typhoon number', 'typhoon name', 'rank','latitude', 'longinitude', 'central pressure', 'max wind')
-		for num_file, infile in enumerate(trajectory_filelist):
-			tmp_data = pd.read_csv(infile, usecols=[0:10], skiprows=1, names=list_option)
+		for num_file, infile in enumerate(csv_filelist):
+			tmp_data = pd.read_csv(infile, usecols=[0, 10], skiprows=1, names=list_option)
 			print(tmp_data)
 			tmp_list = tmp_data.values.tolist()
 			csv_datalist.extend(tmp_list)
 			print('..... Preparating data for ' + str(num_file) + ' ' + str(infile))
 		return trajectory_ondatalist
 
-	def main_driver(self, indir)
+	def main_driver(self, indir, typhoon_num):
+		csv_filelist = self.setup_csv_filelist(self, indir)
+		csv_datalist = self.open_csv_filelist(self, csv_filelist)
 
 if __name__ == "__main__":
 	mapp = mapping()
