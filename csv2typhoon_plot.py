@@ -19,7 +19,7 @@ class mapping:
 
 	def setup_csv_filelist(self, path, *, year='*'):
 		filelist = []
-		filelist = glob.glob(path + 'table' + year + '.csv')
+		filelist = glob.glob(path + 'table' + str(year) + '.csv')
 		return filelist
 
 	def open_csv_filelist(self, csv_filelist):
@@ -37,7 +37,7 @@ class mapping:
 			csv_datalist[num_file].append(tmp_central_pressure_list)
 		return csv_datalist
 
-	def main_mapping_tool(self, csv_datalist, csv_specific_datalist='None'):
+	def main_mapping_tool(self, path, csv_datalist, csv_specific_datalist='None'):
 		fig, ax = plt.subplots()
 		outpath = path + '/fig/' 
 
@@ -47,9 +47,10 @@ class mapping:
 		map.drawmeridians(np.arange(0, 360, 5),  labels=[False, True, False, True], fontsize='small', color='gray', linewidth=0.5)
 		map.drawparallels(np.arange(-90, 90, 5), labels=[True, False, False, True], fontsize='small', color='gray', linewidth=0.5)
 
-		full_latitude_list = csv_datalist[:][0].flatten()
-		full_longitude_list = csv_datalist[:][1].flatten()
-
+		full_latitude_list  = np.array(csv_datalist[:][0]).flatten()
+		full_longitude_list = np.array(csv_datalist[:][1]).flatten()
+		
+		print(full_latitude_list)
 		x, y = map(full_latitude_list, full_longitude_list)
 		
 		hexbin = map.hexbin(np.array(x), np.array(y), gridsize=[20, 20], cmap='Blues', edgecolors='gray', mincnt=3)
@@ -59,7 +60,7 @@ class mapping:
 		if not csv_specific_datalist == "None":
 			case_x, case_y = map(csv_specific_datalist[0], csv_specific_datalist[1])
 			map.plot(case_x, case_y, linewidth=0.5, color='c', ls='--', marker='o', ms=2)
-			map.scatter(case_x, case_y, s=csv_specific_datalist[2], c="pink", alpha=0.5, linewidths="2", edgecolors="red"))
+			map.scatter(case_x, case_y, s=csv_specific_datalist[2], c="pink", alpha=0.5, linewidths="2", edgecolors="red")
 			for text_num, i_text in emmurate(csv_specific_datalist[2]):
 				map.text(case_x[text_num], case_y[text_num], 'SLP' + i_text)
 
@@ -74,11 +75,13 @@ class mapping:
 		"""
 
 		if not typhoon_info == "None": 
+			print()
+			print('..... check specific case filelist')
 			csv_specific_filelist = self.setup_csv_filelist(indir, year=typhoon_info[0])
-			csv_specific_datalist = self.open_csv_filelist(csv_specific_datalist)
-			self.main_mapping_tool(csv_datalist, *, csv_specific_datalist=csv_specific_datalist)
-
-		self.main_mapping_tool(csv_datalist)
+			csv_specific_datalist = self.open_csv_filelist(csv_specific_filelist)
+			self.main_mapping_tool(indir, csv_datalist, csv_specific_datalist=csv_specific_datalist)
+		else:
+			self.main_mapping_tool(indir, csv_datalist)
 
 if __name__ == "__main__":
 	mapp = mapping()
