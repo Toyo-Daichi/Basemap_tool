@@ -29,12 +29,12 @@ class mapping:
 		for num_file, infile in enumerate(csv_filelist):
 			print('..... Preparating data for ' + str(num_file) + ' ' + str(infile))
 			tmp_data = pd.read_csv(infile, usecols=list_num, skiprows=1, names=list_option, sep=',')
-			tmp_latitude_list  = tmp_data['latitude'].values.tolist()
-			csv_datalist[num_file].append(tmp_latitude_list)
-			tmp_longitude_list = tmp_data['longitude'].values.tolist()
-			csv_datalist[num_file].append(tmp_longitude_list)
-			tmp_central_pressure_list = tmp_data['central pressure'].values.tolist()
-			csv_datalist[num_file].append(tmp_central_pressure_list)
+			tmp_lat_list  = tmp_data['latitude'].values.tolist()
+			csv_datalist[num_file].append(tmp_lat_list)
+			tmp_lon_list = tmp_data['longitude'].values.tolist()
+			csv_datalist[num_file].append(tmp_lon_list)
+			tmp_centpre_list = tmp_data['central pressure'].values.tolist()
+			csv_datalist[num_file].append(tmp_centpre_list)
 		return csv_datalist
 
 	def main_mapping_tool(self, path, csv_datalist, csv_specific_datalist='None'):
@@ -47,15 +47,14 @@ class mapping:
 		map.drawmeridians(np.arange(0, 360, 5),  labels=[False, True, False, True], fontsize='small', color='gray', linewidth=0.5)
 		map.drawparallels(np.arange(-90, 90, 5), labels=[True, False, False, True], fontsize='small', color='gray', linewidth=0.5)
 
-		full_latitude_list  = np.array(csv_datalist[:][0]).flatten()
-		full_longitude_list = np.array(csv_datalist[:][1]).flatten()
+		full_lon_list  = np.array(list(map(lambda x: x[0], trajectory_ondatalist))).flatten()
+		full_lat_list  = np.array(list(map(lambda x: x[1], trajectory_ondatalist))).flatten()
 		
-		print(full_latitude_list)
-		x, y = map(full_latitude_list, full_longitude_list)
+		x, y = map(full_lon_list, full_lat_list)
 		
 		hexbin = map.hexbin(np.array(x), np.array(y), gridsize=[20, 20], cmap='Blues', edgecolors='gray', mincnt=3)
 		cbar = plt.colorbar(hexbin, extend='max')
-		cbar.set_label(r'number',fontsize=8)
+		cbar.set_label(r'number', fontsize=8)
 
 		if not csv_specific_datalist == "None":
 			case_x, case_y = map(csv_specific_datalist[0], csv_specific_datalist[1])
