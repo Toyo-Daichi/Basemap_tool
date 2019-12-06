@@ -105,7 +105,7 @@ class mapping:
 			print('..... Check specific case filelist')
 			csv_specific_filelist = self.setup_csv_filelist(indir, year=typhoon_info[0])
 			csv_specific_datalist = self.open_csv_filelist(csv_specific_filelist, typhoon_number=typhoon_info[1])
-			
+			print(csv_specific_datalist)
 			self.main_mapping_tool(indir, csv_datalist, csv_specific_datalist=csv_specific_datalist)
 		else:
 			self.main_mapping_tool(indir, csv_datalist)
