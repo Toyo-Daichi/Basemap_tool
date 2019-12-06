@@ -37,7 +37,7 @@ class mapping:
 				tmp_centpre_list = tmp_data['central pressure'].values.tolist()
 				csv_datalist[num_file].append(tmp_centpre_list)
 			else:
-				specific_data = tmp_data.query('typhoon_number == typhoon_number') 
+				specific_data = tmp_data.query('typhoon_number == %s' % typhoon_number) 
 				print(specific_data)
 
 		return csv_datalist
