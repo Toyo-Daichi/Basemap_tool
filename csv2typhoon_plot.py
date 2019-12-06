@@ -74,24 +74,25 @@ class mapping:
 
 		x, y = mapping(lon_list, lat_list)
 		hexbin = mapping.hexbin(np.array(x), np.array(y), gridsize=[30, 30], cmap='Blues', edgecolors='gray', mincnt=8)
-		cbar = plt.colorbar(hexbin, extend='max')
-		cbar.set_label(r'number', fontsize=8)
 
 		if not csv_specific_datalist == "None":
-			specific_lat_list, specific_lon_list = csv_specific_datalist[0], csv_specific_datalist[1]
-			lat_list, lon_list = [], []
+			specific_lat_list, specific_lon_list, specific_centpre_list = csv_specific_datalist[0], csv_specific_datalist[1], csv_specific_datalist[2]
+			lat_list, lon_list, centpre_list = [], [], []
 			for i_num in range(len(specific_lon_list)):
 				if(lat_min <= specific_lat_list[i_num] <= lat_max and lon_min <= specific_lon_list[i_num] <= lon_max):
 					lat_list.append(specific_lat_list[i_num])
 					lon_list.append(specific_lon_list[i_num])	
+					centpre_list.append(specific_centpre_list[i_num])	
 
 			case_x, case_y = mapping(lon_list, lat_list)
-			print(case_x, case_y)
-			mapping.plot(case_x, case_y, linewidth=0.5, color='c', ls='--', marker='o', ms=2)
-			mapping.scatter(case_x, case_y, s=csv_specific_datalist[2], c="pink", alpha=0.5, linewidths="2", edgecolors="red")
-			for text_num, i_text in enumerate(csv_specific_datalist[2]):
-				mapping.text(case_x[text_num], case_y[text_num], 'SLP: ' + i_text)
+			#mapping.plot(case_x, case_y, linewidth=0.5, color='c', ls='--', marker='o', ms=2)
+			mapping.plot(case_x, case_y)
+			mapping.scatter(case_x, case_y, s=centpre_list, c="pink", alpha=0.5, linewidths="2", edgecolors="red")
+		#	for text_num, i_text in enumerate(centpre_list):
+		#		plt.text(case_x[text_num], case_y[text_num], 'SLP: ' + str(i_text))
 
+		cbar = plt.colorbar(hexbin, extend='max')
+		cbar.set_label(r'number', fontsize=8)
 		plt.title('Course of typhoon 2000-2019', loc='left', fontsize=10)
 		plt.show()
 
@@ -106,7 +107,6 @@ class mapping:
 			print('..... Check specific case filelist')
 			csv_specific_filelist = self.setup_csv_filelist(indir, year=typhoon_info[0])
 			csv_specific_datalist = self.open_csv_filelist(csv_specific_filelist, typhoon_number=typhoon_info[1])
-			print(csv_specific_datalist)
 			self.main_mapping_tool(indir, csv_datalist, csv_specific_datalist=csv_specific_datalist)
 		else:
 			self.main_mapping_tool(indir, csv_datalist)
