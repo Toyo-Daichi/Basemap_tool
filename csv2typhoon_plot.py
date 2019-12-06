@@ -36,6 +36,7 @@ class mapping:
 				csv_datalist[num_file].append(tmp_lon_list)
 				tmp_centpre_list = tmp_data['central_pressure'].values.tolist()
 				csv_datalist[num_file].append(tmp_centpre_list)
+
 			else:
 				csv_datalist = []
 				specific_data = tmp_data.query('typhoon_number == %s' % typhoon_number) 
@@ -45,6 +46,7 @@ class mapping:
 				csv_datalist.append(tmp_lon_list)
 				tmp_centpre_list = specific_data['central_pressure'].values.tolist()
 				csv_datalist.append(tmp_centpre_list)
+
 		return csv_datalist
 
 	def main_mapping_tool(self, path, csv_datalist, csv_specific_datalist='None'):
@@ -76,7 +78,9 @@ class mapping:
 		hexbin = mapping.hexbin(np.array(x), np.array(y), gridsize=[30, 30], cmap='Blues', edgecolors='gray', mincnt=8)
 
 		if not csv_specific_datalist == "None":
-			specific_lat_list, specific_lon_list, specific_centpre_list = csv_specific_datalist[0], csv_specific_datalist[1], csv_specific_datalist[2]
+			specific_lat_list, specific_lon_list = csv_specific_datalist[0], csv_specific_datalist[1]
+			specific_centpre_list = csv_specific_datalist[2]
+
 			lat_list, lon_list, centpre_list = [], [], []
 			for i_num in range(len(specific_lon_list)):
 				if(lat_min <= specific_lat_list[i_num] <= lat_max and lon_min <= specific_lon_list[i_num] <= lon_max):
@@ -86,7 +90,7 @@ class mapping:
 
 			case_x, case_y = mapping(lon_list, lat_list)
 			#mapping.plot(case_x, case_y, linewidth=0.5, color='c', ls='--', marker='o', ms=2)
-			mapping.plot(case_x, case_y)
+			mapping.plot(np.array(case_x), np.array(case_y))
 			mapping.scatter(case_x, case_y, s=centpre_list, c="pink", alpha=0.5, linewidths="2", edgecolors="red")
 		#	for text_num, i_text in enumerate(centpre_list):
 		#		plt.text(case_x[text_num], case_y[text_num], 'SLP: ' + str(i_text))
@@ -121,7 +125,7 @@ if __name__ == "__main__":
 	If you want to write a specific typhoon route, enter the typhoon information.
 	typhoon_info = [year, typhoon_number]
 	"""
-	typhoon_info = [2018, 1810]
+	typhoon_info = [2016, 1610]
 
 	#main_driver
 	mapp.main_driver(indir, typhoon_info=typhoon_info)
