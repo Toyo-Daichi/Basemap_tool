@@ -22,19 +22,23 @@ class mapping:
 		filelist = glob.glob(path + 'table' + str(year) + '.csv')
 		return filelist
 
-	def open_csv_filelist(self, csv_filelist):
+	def open_csv_filelist(self, csv_filelist, *, year='None'):
 		csv_datalist = [ []*i for i in range(len(csv_filelist)) ]
 		list_num     = list(range(11)) 
 		list_option  = ( 'year', 'month', 'day', 'hour(UTC)', 'typhoon number', 'typhoon name', 'rank','latitude', 'longitude', 'central pressure', 'max wind')
 		for num_file, infile in enumerate(csv_filelist):
 			print('..... Preparating data for ' + str(num_file) + ' ' + str(infile))
 			tmp_data = pd.read_csv(infile, usecols=list_num, skiprows=1, names=list_option, sep=',')
-			tmp_lat_list  = tmp_data['latitude'].values.tolist()
-			csv_datalist[num_file].append(tmp_lat_list)
-			tmp_lon_list = tmp_data['longitude'].values.tolist()
-			csv_datalist[num_file].append(tmp_lon_list)
-			tmp_centpre_list = tmp_data['central pressure'].values.tolist()
-			csv_datalist[num_file].append(tmp_centpre_list)
+			if year == "None":
+				tmp_lat_list  = tmp_data['latitude'].values.tolist()
+				csv_datalist[num_file].append(tmp_lat_list)
+				tmp_lon_list = tmp_data['longitude'].values.tolist()
+				csv_datalist[num_file].append(tmp_lon_list)
+				tmp_centpre_list = tmp_data['central pressure'].values.tolist()
+				csv_datalist[num_file].append(tmp_centpre_list)
+			else:
+				print(tmp_data)
+
 		return csv_datalist
 
 	def main_mapping_tool(self, path, csv_datalist, csv_specific_datalist='None'):
