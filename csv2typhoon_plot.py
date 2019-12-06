@@ -34,12 +34,16 @@ class mapping:
 				csv_datalist[num_file].append(tmp_lat_list)
 				tmp_lon_list = tmp_data['longitude'].values.tolist()
 				csv_datalist[num_file].append(tmp_lon_list)
-				tmp_centpre_list = tmp_data['central pressure'].values.tolist()
+				tmp_centpre_list = tmp_data['central_pressure'].values.tolist()
 				csv_datalist[num_file].append(tmp_centpre_list)
 			else:
 				specific_data = tmp_data.query('typhoon_number == %s' % typhoon_number) 
-				print(specific_data)
-
+				tmp_lat_list  = specific_data['latitude'].values.tolist()
+				csv_datalist[num_file].append(tmp_lat_list)
+				tmp_lon_list = specific_data['longitude'].values.tolist()
+				csv_datalist[num_file].append(tmp_lon_list)
+				tmp_centpre_list = specific_data['central_pressure'].values.tolist()
+				csv_datalist[num_file].append(tmp_centpre_list)
 		return csv_datalist
 
 	def main_mapping_tool(self, path, csv_datalist, csv_specific_datalist='None'):
@@ -61,24 +65,30 @@ class mapping:
 		full_lat_list = np.sum(full_lat_list, axis=0)
 		full_lon_list = np.sum(full_lon_list, axis=0)
 		
-		lon_list, lat_list = [], []
-		for i_num in range(len(full_lon_list)):
-			if(lon_min <= full_lon_list[i_num] <= lon_max and lat_min <= full_lat_list[i_num] <= lat_max):
-				lon_list.append(full_lon_list[i_num])	
+		lat_list, lon_list = [], []
+		for i_num in range(len(full_lat_list)):
+			if(lat_min <= full_lat_list[i_num] <= lat_max and lon_min <= full_lon_list[i_num] <= lon_max):
 				lat_list.append(full_lat_list[i_num])	
+				lon_list.append(full_lon_list[i_num])	
 
 		x, y = mapping(lon_list, lat_list)
 		hexbin = mapping.hexbin(np.array(x), np.array(y), gridsize=[30, 30], cmap='Blues', edgecolors='gray', mincnt=8)
 		cbar = plt.colorbar(hexbin, extend='max')
 		cbar.set_label(r'number', fontsize=8)
 
-		#if not csv_specific_datalist == "None":
-		#	print(csv_specific_datalist)
-		#	case_x, case_y = mapping(csv_specific_datalist[0], csv_specific_datalist[1])
-		#	mapping.plot(case_x, case_y, linewidth=0.5, color='c', ls='--', marker='o', ms=2)
-		#	mapping.scatter(case_x, case_y, s=csv_specific_datalist[2], c="pink", alpha=0.5, linewidths="2", edgecolors="red")
-		#	for text_num, i_text in emmurate(csv_specific_datalist[2]):
-		#		mapping.text(case_x[text_num], case_y[text_num], 'SLP' + i_text)
+		if not csv_specific_datalist == "None":
+			specific_lat_list, specific_lon_list = csv_specific_datalist[0], csv_specific_datalist[1]
+			lat_list, lon_list = [], []
+			for i_num in range(len(specific_lon_list)):
+				if(lat_min <= specific_lat_list[i_num] <= lat_max and lon_min <= specific_lon_list[i_num] <= lon_max):
+					lat_list.append(specific_lat_list[i_num])
+					lon_list.append(specific_lon_list[i_num])	
+
+			case_x, case_y = mapping(lon_list, lat_list)
+			mapping.plot(case_x, case_y, linewidth=0.5, color='c', ls='--', marker='o', ms=2)
+			mapping.scatter(case_x, case_y, s=csv_specific_datalist[2], c="pink", alpha=0.5, linewidths="2", edgecolors="red")
+			for text_num, i_text in emmurate(csv_specific_datalist[2]):
+				mapping.text(case_x[text_num], case_y[text_num], 'SLP' + i_text)
 
 		plt.title('Course of typhoon 2000-2019', loc='left', fontsize=10)
 		plt.show()
