@@ -89,8 +89,8 @@ class mapping:
 			print(case_x, case_y)
 			mapping.plot(case_x, case_y, linewidth=0.5, color='c', ls='--', marker='o', ms=2)
 			mapping.scatter(case_x, case_y, s=csv_specific_datalist[2], c="pink", alpha=0.5, linewidths="2", edgecolors="red")
-			for text_num, i_text in emmurate(csv_specific_datalist[2]):
-				mapping.text(case_x[text_num], case_y[text_num], 'SLP' + i_text)
+			for text_num, i_text in enumerate(csv_specific_datalist[2]):
+				mapping.text(case_x[text_num], case_y[text_num], 'SLP: ' + i_text)
 
 		plt.title('Course of typhoon 2000-2019', loc='left', fontsize=10)
 		plt.show()
