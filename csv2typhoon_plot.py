@@ -85,6 +85,7 @@ class mapping:
 					lon_list.append(specific_lon_list[i_num])	
 
 			case_x, case_y = mapping(lon_list, lat_list)
+			print(case_x, case_y)
 			mapping.plot(case_x, case_y, linewidth=0.5, color='c', ls='--', marker='o', ms=2)
 			mapping.scatter(case_x, case_y, s=csv_specific_datalist[2], c="pink", alpha=0.5, linewidths="2", edgecolors="red")
 			for text_num, i_text in emmurate(csv_specific_datalist[2]):
