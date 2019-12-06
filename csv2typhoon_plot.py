@@ -49,7 +49,7 @@ class mapping:
 
 		return csv_datalist
 
-	def main_mapping_tool(self, path, csv_datalist, csv_specific_datalist='None'):
+	def main_mapping_tool(self, path, csv_datalist, csv_specific_datalist='None', typhoon_info='None'):
 		fig, ax = plt.subplots()
 		outpath = path + '/fig/' 
 
@@ -89,15 +89,17 @@ class mapping:
 					centpre_list.append(specific_centpre_list[i_num])	
 
 			case_x, case_y = mapping(lon_list, lat_list)
-			#mapping.plot(case_x, case_y, linewidth=0.5, color='c', ls='--', marker='o', ms=2)
-			mapping.plot(np.array(case_x), np.array(case_y))
-			mapping.scatter(case_x, case_y, s=centpre_list, c="pink", alpha=0.5, linewidths="2", edgecolors="red")
-		#	for text_num, i_text in enumerate(centpre_list):
-		#		plt.text(case_x[text_num], case_y[text_num], 'SLP: ' + str(i_text))
 
-		cbar = plt.colorbar(hexbin, extend='max')
-		cbar.set_label(r'number', fontsize=8)
-		plt.title('Course of typhoon 2000-2019', loc='left', fontsize=10)
+			mapping.plot(case_x, case_y, linewidth=0.5, color='red', ls='--', marker='o', ms=2)
+
+		cbar = plt.colorbar(hexbin)
+		cbar.set_label('number', fontsize=8)
+		if not csv_specific_datalist == "None":
+			plt.title('Course of typhoon 2000-2019' + ', ' + 'Typhoon track: ' + str(typhoon_info[1]), loc='left', fontsize=9)
+		else:
+			plt.title('Course of typhoon 2000-2019', loc='left', fontsize=10)
+		plt.savefig(outpath + 'typhoon_strength2000-2019' + '_track_' + str(typhoon_info[1]) + '.png')
+		print('..... savefig ' + outpath + 'typhoon_strength2000-2019' + '_track_' + str(typhoon_info[1]) + '.png')
 		plt.show()
 
 	def main_driver(self, indir, *, typhoon_info='None'):
@@ -111,7 +113,7 @@ class mapping:
 			print('..... Check specific case filelist')
 			csv_specific_filelist = self.setup_csv_filelist(indir, year=typhoon_info[0])
 			csv_specific_datalist = self.open_csv_filelist(csv_specific_filelist, typhoon_number=typhoon_info[1])
-			self.main_mapping_tool(indir, csv_datalist, csv_specific_datalist=csv_specific_datalist)
+			self.main_mapping_tool(indir, csv_datalist, csv_specific_datalist=csv_specific_datalist, typhoon_info=typhoon_info)
 		else:
 			self.main_mapping_tool(indir, csv_datalist)
 
