@@ -44,6 +44,7 @@ class mapping:
 				csv_datalist[num_file].append(tmp_lon_list)
 				tmp_centpre_list = specific_data['central_pressure'].values.tolist()
 				csv_datalist[num_file].append(tmp_centpre_list)
+				csv_datalist = list(map(lambda x: x[0], csv_datalist))
 		return csv_datalist
 
 	def main_mapping_tool(self, path, csv_datalist, csv_specific_datalist='None'):
