@@ -37,14 +37,14 @@ class mapping:
 				tmp_centpre_list = tmp_data['central_pressure'].values.tolist()
 				csv_datalist[num_file].append(tmp_centpre_list)
 			else:
+				csv_datalist = []
 				specific_data = tmp_data.query('typhoon_number == %s' % typhoon_number) 
 				tmp_lat_list  = specific_data['latitude'].values.tolist()
-				csv_datalist[num_file].append(tmp_lat_list)
+				csv_datalist.append(tmp_lat_list)
 				tmp_lon_list = specific_data['longitude'].values.tolist()
-				csv_datalist[num_file].append(tmp_lon_list)
+				csv_datalist.append(tmp_lon_list)
 				tmp_centpre_list = specific_data['central_pressure'].values.tolist()
-				csv_datalist[num_file].append(tmp_centpre_list)
-				csv_datalist = list(map(lambda x: x[0], csv_datalist))
+				csv_datalist.append(tmp_centpre_list)
 		return csv_datalist
 
 	def main_mapping_tool(self, path, csv_datalist, csv_specific_datalist='None'):
