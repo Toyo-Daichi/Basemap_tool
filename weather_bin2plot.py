@@ -42,7 +42,7 @@ class mapping:
 		month_thirty    = [ 4, 6, 9, 11 ]
 		month_twntynine = [ 2 ]
 
-		while num_time_list < 13:
+		while num_time_list < 26:
 			time_list.append(str(yyyy) + str('%02d' % mm) + str('%02d' % dd) + str('%02d' % hh) + '00')
 			hh = hh - 6
 	
@@ -86,8 +86,11 @@ class mapping:
 
 		fig, ax = plt.subplots()
 		outpath = path + '/Trajectory_GSMData/fig/' 
-
-		mapping = Basemap( projection='lcc', resolution="i", lat_0=35, lon_0=140, fix_aspect=(1,1), llcrnrlat=17, urcrnrlat=50, llcrnrlon=120, urcrnrlon=155 )
+		
+		lat_min, lat_max = 17, 50
+		lon_min, lon_max = 120, 155
+		
+		mapping = Basemap( projection='lcc', resolution="i", lat_0=35, lon_0=140, fix_aspect=(1,1), llcrnrlat=lat_min, urcrnrlat=lat_max, llcrnrlon=lon_min, urcrnrlon=lon_max )
 
 		mapping.drawcoastlines(color='black', linewidth=0.5)
 		mapping.drawmeridians(np.arange(0, 360, 5),  labels=[False, True, False, True], fontsize='small', color='gray', linewidth=0.5)
@@ -101,7 +104,7 @@ class mapping:
 			if level == "1000":
 				hPa, min_list = 0, [0, 200]
 			elif level == "925":
-				hPa, min_list = 1, [0, 400]
+				hPa, min_list = 1, [0, 500]
 			elif level == "850":
 				hPa, min_list = 2, [0, 750]
 			elif level == "700":
@@ -132,23 +135,26 @@ class mapping:
 			num_list = list(range(0, 7500, 10))
 
 			contour = mapping.contour(x, y, gpv_height_data, linewidths=0.05, linestyles='-', levels=num_list, colors='m')
-			contour.clabel(fmt='%1.1f', fontsize=8)
+			contour.clabel(fmt='%1.1f', fontsize=6.5)
 
 			if not min_list == "None":
-				lines = mapping.contourf(x, y, gpv_height_data, min_list, colors='red', hatches=['/'])
+				lines = mapping.contourf(x, y, gpv_height_data, min_list, alpha=0.5, hatches=['///'], lw=1., zorder = 0)
 
 			for i_nx, i_ny in itertools.product(range(nx), range(ny)):
-				if speed[i_ny][i_nx] > 10 and lon_list[i_ny][i_nx] > 120 and lat_list[i_ny][i_nx] > 20:
+				if speed[i_ny][i_nx] > 10 and lon_min <= lon_list[i_ny][i_nx] <= lon_max and lat_min <= lat_list[i_ny][i_nx] <= lat_max:
 					print('...... Halfway step, ', i_nx, i_ny, speed[i_ny][i_nx])
-					vector = mapping.quiver(x[i_ny][i_nx], y[i_ny][i_nx], gpv_u_data[i_ny][i_nx], gpv_v_data[i_ny][i_nx], color='k', units='dots', scale=2.0)
+					vector = mapping.quiver(x[i_ny][i_nx], y[i_ny][i_nx], gpv_u_data[i_ny][i_nx], gpv_v_data[i_ny][i_nx], color='k', units='dots', scale=2.0, alpha=0.6)
 			
+			artists, labels = lines.legend_elements()
+			
+			plt.legend(artists, labels, handleheight=2)
 			plt.title(time_list[snap_step] + ' @GSM ' + level + 'hPa' , loc='left', fontsize=10)
 			plt.quiverkey(vector, 0.75, 0.9, 10, '10 m/s', labelpos='W', coordinates='figure')
 
-			#plt.savefig(outpath + 'GPV_Height' + time_list[snap_step] + '.png')
-			#print('...... Saving fig :: ', outpath + 'GPV_Height' + time_list[snap_step] + '.png')
+			plt.savefig(outpath + 'GPV_elem_' + time_list[snap_step] + '.png')
+			print('...... Saving fig :: ', outpath + 'GPV_elem_' + time_list[snap_step] + '.png')
 
-		plt.show()
+		#plt.show()
 
 	def main_driver(self, mode, indir, time_list, level):
 		nx, ny, hgt, elem = self.gpv_data_coef()
@@ -186,7 +192,7 @@ if __name__ == "__main__":
 	mode 2: Normal weather element info at GPV GSM gif.
 	"""
 	
-	mode = 1
+	mode = 2
 
 	#main_driver
 	mapp.main_driver(mode, indir, time_list, level)
