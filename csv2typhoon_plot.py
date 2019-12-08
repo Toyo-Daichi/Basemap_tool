@@ -100,7 +100,7 @@ class mapping:
 			plt.title('Course of typhoon 2000-2019', loc='left', fontsize=10)
 		plt.savefig(outpath + 'typhoon_strength2000-2019' + '_track_' + str(typhoon_info[1]) + '.png')
 		print('..... savefig ' + outpath + 'typhoon_strength2000-2019' + '_track_' + str(typhoon_info[1]) + '.png')
-		plt.show()
+		#plt.show()
 
 	def main_driver(self, indir, *, typhoon_info='None'):
 		csv_filelist = self.setup_csv_filelist(indir)

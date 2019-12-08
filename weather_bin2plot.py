@@ -42,7 +42,7 @@ class mapping:
 		month_thirty    = [ 4, 6, 9, 11 ]
 		month_twntynine = [ 2 ]
 
-		while num_time_list < 26:
+		while num_time_list < 40:
 			time_list.append(str(yyyy) + str('%02d' % mm) + str('%02d' % dd) + str('%02d' % hh) + '00')
 			hh = hh - 6
 	
@@ -104,7 +104,7 @@ class mapping:
 			if level == "1000":
 				hPa, min_list = 0, [0, 200]
 			elif level == "925":
-				hPa, min_list = 1, [0, 500]
+				hPa, min_list = 1, [0, 600]
 			elif level == "850":
 				hPa, min_list = 2, [0, 750]
 			elif level == "700":
@@ -134,20 +134,17 @@ class mapping:
 			gpv_height_data = gpv_datalist[snap_step][4][hPa]
 			num_list = list(range(0, 7500, 10))
 
-			contour = mapping.contour(x, y, gpv_height_data, linewidths=0.05, linestyles='-', levels=num_list, colors='m')
+			contour = mapping.contour(x, y, gpv_height_data, linewidths=0.25, linestyles='-', levels=num_list, colors='m')
 			contour.clabel(fmt='%1.1f', fontsize=6.5)
 
 			if not min_list == "None":
-				lines = mapping.contourf(x, y, gpv_height_data, min_list, alpha=0.5, hatches=['///'], lw=1., zorder = 0)
+				lines = mapping.contourf(x, y, gpv_height_data, min_list, alpha=0.5, hatches=['///'], lw=1., zorder=0, edgecolor='r', colors="y")
 
 			for i_nx, i_ny in itertools.product(range(nx), range(ny)):
 				if speed[i_ny][i_nx] > 10 and lon_min <= lon_list[i_ny][i_nx] <= lon_max and lat_min <= lat_list[i_ny][i_nx] <= lat_max:
 					print('...... Halfway step, ', i_nx, i_ny, speed[i_ny][i_nx])
-					vector = mapping.quiver(x[i_ny][i_nx], y[i_ny][i_nx], gpv_u_data[i_ny][i_nx], gpv_v_data[i_ny][i_nx], color='k', units='dots', scale=2.0, alpha=0.6)
+					vector = mapping.quiver(x[i_ny][i_nx], y[i_ny][i_nx], gpv_u_data[i_ny][i_nx], gpv_v_data[i_ny][i_nx], color='c', units='dots', scale=2.0, alpha=0.6)
 			
-			artists, labels = lines.legend_elements()
-			
-			plt.legend(artists, labels, handleheight=2)
 			plt.title(time_list[snap_step] + ' @GSM ' + level + 'hPa' , loc='left', fontsize=10)
 			plt.quiverkey(vector, 0.75, 0.9, 10, '10 m/s', labelpos='W', coordinates='figure')
 
