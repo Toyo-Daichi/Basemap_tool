@@ -68,7 +68,7 @@ class mapping:
 	def setup_gpv_filelist(self, path, time_list):
 		filelist = []
 		for i_file in time_list:
-			filelist.append(path + '/GSM_Data/' + i_file[0:8] + '/' + i_file[0:10] + '.bin')
+			filelist.append(path + '/your_gpv_data')
 		return filelist 
 
 	def open_gpv_filelist(self, gpv_filelist, nx, ny, hgt, elem):
@@ -85,7 +85,7 @@ class mapping:
 	def main_mapping_tool(self, mode, path, time_list, nx, ny, *, gpv_datalist='None', snap_step=0, level='1000'):
 
 		fig, ax = plt.subplots()
-		outpath = path + '/Trajectory_GSMData/fig/' 
+		outpath = path + '/fig/' 
 		
 		lat_min, lat_max = 17, 50
 		lon_min, lon_max = 120, 155
@@ -170,7 +170,7 @@ if __name__ == "__main__":
 	mapp = mapping()
 
 	#input dir
-	indir = '/work3/daichi/MRI/Data/'
+	indir = '/your_directory'
 
 	#target time
 	yyyy, mm, dd, hh = 2016, 8, 31, 0

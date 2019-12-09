@@ -121,7 +121,7 @@ if __name__ == "__main__":
 	mapp = mapping()
 
 	#input dir
-	indir = '/work3/daichi/MRI/Data/typhoon_csv/'
+	indir = '/your_directory/'
 
 	"""
 	If you want to write a specific typhoon route, enter the typhoon information.
